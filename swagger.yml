@@ -1,0 +1,271 @@
+openapi: 3.0.3
+info:
+  title: "Reto-Swapi-Indra"
+  description: "Reto-Swapi-Indra"
+  version: "1.0.0"
+
+tags:
+- name: "swapi"
+  description: "Consultas al api de Swapi"
+- name: "people"
+  description: "Consultas para registro y listado de personas"
+paths:
+  /swapi/people:
+    get:
+      tags:
+      - "swapi"
+      summary: "lista personajes de Swapi"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SwapiPeople"
+        "404":
+          description: "data not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalError"
+        
+          
+  /swapi/planets:
+    get:
+      tags:
+      - "swapi"
+      summary: "lista planetas de Swapi"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SwapiPlanets"
+        "404":
+          description: "data not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalError"
+  /people:
+    post:
+      tags:
+      - "people"
+      summary: "Registrar persona"
+      requestBody:
+        description: Create a new person register in the store
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Person"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/SuccessfulResponse"
+        "400":
+          description: "data not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalError"
+    
+    get:
+      tags:
+      - "people"
+      summary: "Listar personas registradas"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+        "404":
+          description: "data not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalError"
+
+  /people/{id}:
+    get:
+      tags:
+      - "people"
+      summary: "Obtener datos de persona por id"
+      parameters:
+        - name: id
+          in: path
+          description: ID of person to return
+          required: true
+          schema:
+            type: string
+            format: UUID
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+        "404":
+          description: "data not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "internal error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalError"
+
+components:
+  schemas:
+    SwapiPeople:
+      type: object
+      properties:
+        nombre:
+          type: string
+        altura:
+          type: string
+        peso:
+          type: string
+        colorCabello:
+          type: string
+        tes:
+          type: string
+        colorOjos:
+          type: string
+        anioNacimiento:
+          type: string
+        genero:
+          type: string
+        planetaOrigen:
+          type: string
+        peliculas:
+          type: array
+          items:
+            type: string
+        especies:
+          type: array
+          items:
+            type: string
+        vehiculos:
+          type: array
+          items:
+            type: string
+        naves:
+          type: array
+          items:
+            type: string
+        fechaRegistro:
+          type: string
+          format: date-time
+        fechaEdicion:
+          type: string
+          format: date-time
+        url:
+          type: string
+    
+    SwapiPlanets:
+      type: object
+      properties:
+        nombre:
+          type: string
+        periodoRotacion:
+          type: string
+        periodoOrbital:
+          type: string
+        diametro:
+          type: string
+        clima:
+          type: string
+        gravedad:
+          type: string
+        terreno:
+          type: string
+        superficieAgua:
+          type: string
+        poblacion:
+          type: string
+        residentes:
+          type: array
+          items:
+            type: string
+        peliculas:
+          type: array
+          items:
+            type: string
+        fechaRegistro:
+          type: string
+          format: date-time
+        fechaEdicion:
+          type: string
+          format: date-time
+        url:
+          type: string
+
+    Person:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        nombre:
+          type: "string"
+        genero:
+          type: "string"
+        planetaOrigen:
+          type: "string"
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    InternalError:
+      type: object
+      properties:
+        message:
+          type: string
+    SuccessfulResponse:
+      type: object
+      properties:
+        message:
+          type: string
