@@ -1,0 +1,77 @@
+service: reto-indra
+frameworkVersion: '3'
+
+custom:
+  tableName: PeopleTblReto
+  esbuild:
+    bundle: true
+    minify: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: us-west-1
+  stage: dev
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.tableName}
+    SWAPI_BASE_URL: https://swapi.py4e.com/api
+    REGION: us-west-1
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action: 
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource:
+        - "Fn::GetAtt": [PeopleDynamoTable, Arn]
+
+functions:
+  swapi_getPeople:
+    handler: src/presentation/functions/swapiGetPeople.getPeople
+    events:
+      - httpApi:
+          path: /swapi/people
+          method: get
+  swapi_getPlanets:
+    handler: src/presentation/functions/swapiGetPlanets.getPlanets
+    events:
+      - httpApi:
+          path: /swapi/planets
+          method: get
+
+  addPeople:
+    handler: src/presentation/functions/AddPerson.addPerson
+    events:
+      - httpApi:
+          path: /people
+          method: post
+  getPeople:
+    handler: src/presentation/functions/getPeople.getPeople
+    events:
+      - httpApi:
+          path: /people
+          method: get
+  getPerson:
+    handler: src/presentation/functions/getPerson.getPerson
+    events:
+      - httpApi:
+          path: /people/{id}
+          method: get
+
+resources:
+  Resources:
+    PeopleDynamoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+plugins:
+  - serverless-esbuild
