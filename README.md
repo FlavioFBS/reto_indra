@@ -1,30 +1,25 @@
-<!--
-title: 'AWS Simple HTTP Endpoint example in NodeJS'
-description: 'This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.'
-layout: Doc
-framework: v3
-platform: AWS
-language: nodeJS
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+# Reto Indra
+- Crear una API en Node.js con el framework Serverless para un despliegue en AWS.
+- Adaptar y transformar los modelos de la API de prueba. Se tienen que mapear todos los nombres de atributos modelos del inglés al español (Ej: name -> nombre).
+- Integrar la API de prueba StarWars API (líneas abajo está el link) se deben integrar uno o más endpoints.
+- Crear un modelo de su elección mediante el uso de un endpoint POST, la data se tendrá que almacenar dentro de una base de datos.
+- Crear un endpoint GET que muestre la data almacenada.
 
-# Serverless Framework Node HTTP API on AWS
 
-This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.
 
-This template does not include any kind of persistence (database). For more advanced examples, check out the [serverless/examples repository](https://github.com/serverless/examples/) which includes Typescript, Mongo, DynamoDB and other examples.
+## Cómo usar
+### Instalar dependencias:
+```
+$ npm install
+```
 
-## Usage
-
-### Deployment
+### Despliegue son serverless
 
 ```
 $ serverless deploy
 ```
 
-After deploying, you should see output similar to:
+Luego del despliegue, se observará algo simular a esto:
 
 ```bash
 Deploying aws-node-http-api-project to stage dev (us-east-1)
@@ -36,62 +31,125 @@ functions:
   hello: aws-node-http-api-project-dev-hello (1.9 kB)
 ```
 
-_Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [http event docs](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
+### Consulta de servicios
 
-### Invocation
-
-After successful deployment, you can call the created application via HTTP:
+Luego del despliegue se puede consultar los servicios de esta forma:
 
 ```bash
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/
+curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/swapi/people
+curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/swapi/planets
+curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/people
+curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/people/{id}
 ```
 
-Which should result in response similar to the following (removed `input` content for brevity):
+Se obtendra respuesta de este tipo
 
 ```json
 {
-  "message": "Go Serverless v2.0! Your function executed successfully!",
-  "input": {
-    ...
-  }
+  "objAttr": ""
 }
 ```
 
-### Local development
 
-You can invoke your function locally by using the following command:
-
-```bash
-serverless invoke local --function hello
-```
-
-Which should result in response similar to the following:
-
-```
-{
-  "statusCode": 200,
-  "body": "{\n  \"message\": \"Go Serverless v3.0! Your function executed successfully!\",\n  \"input\": \"\"\n}"
-}
-```
-
-Alternatively, it is also possible to emulate API Gateway and Lambda locally by using `serverless-offline` plugin. In order to do that, execute the following command:
-
-```bash
-serverless plugin install -n serverless-offline
-```
-
-It will add the `serverless-offline` plugin to `devDependencies` in `package.json` file as well as will add it to `plugins` in `serverless.yml`.
-
-After installation, you can start local emulation with:
-
-```
-serverless offline
-```
-
-To learn more about the capabilities of `serverless-offline`, please refer to its [GitHub repository](https://github.com/dherault/serverless-offline).
-
-# Deploy:
+## Despliegue por comando de npm:
 
 ```bash
   npm run aws:deploy
 ```
+
+## Ejecución de Tests
+```bash
+  npm run test
+```
+
+## Ejecución de Tests con coverage
+```bash
+  npm run test:coverage
+```
+
+# Documentación
+
+## Reto-Swapi-Indra
+Reto-Swapi-Indra
+
+## Version: 1.0.0
+
+### /swapi/people
+
+#### GET
+##### Summary:
+
+lista personajes de Swapi
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | successful operation |
+| 404 | data not found |
+| 500 | internal error |
+
+### /swapi/planets
+
+#### GET
+##### Summary:
+
+lista planetas de Swapi
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | successful operation |
+| 404 | data not found |
+| 500 | internal error |
+
+### /people
+
+#### POST
+##### Summary:
+
+Registrar persona
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | successful operation |
+| 400 | data not found |
+| 500 | internal error |
+
+#### GET
+##### Summary:
+
+Listar personas registradas
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | successful operation |
+| 404 | data not found |
+| 500 | internal error |
+
+### /people/{id}
+
+#### GET
+##### Summary:
+
+Obtener datos de persona por id
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| id | path | ID of person to return | Yes | string (UUID) |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | successful operation |
+| 404 | data not found |
+| 500 | internal error |
+
